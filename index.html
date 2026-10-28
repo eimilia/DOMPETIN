@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dompetin - Smart Financial Manager MVP</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- Top Navigation Bar -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+            <div class="flex items-center gap-3">
+                <div class="bg-emerald-600 text-white p-2.5 rounded-xl shadow-md">
+                    <i class="fa-solid fa-wallet text-xl"></i>
+                </div>
+                <span class="text-2xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                    Dompetin
+                </span>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <button onclick="showAlert('Notifikasi', 'Pengingat: Tagihan listrik jatuh tempo besok!')" class="p-2 text-slate-400 hover:text-emerald-600 rounded-full hover:bg-emerald-50 transition relative">
+                    <i class="fa-regular fa-bell text-xl"></i>
+                    <span class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-white"></span>
+                </button>
+                <div class="flex items-center space-x-3 border-l pl-4 border-slate-200">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" class="w-9 h-9 rounded-full object-cover ring-2 ring-emerald-500/20" alt="Avatar User">
+                    <div class="hidden sm:block text-left">
+                        <p class="text-xs text-slate-400 font-medium">Pengguna Dompetin</p>
+                        <p class="text-sm font-semibold text-slate-700">Budi Santoso</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex-grow py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="lg:col-span-1 space-y-2">
+            <nav class="flex flex-col space-y-1 bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="tab-btn active flex items-center space-x-3 px-4 py-3 text-sm font-semibold rounded-xl bg-emerald-50 text-emerald-600 transition">
+                    <i class="fa-solid fa-chart-pie text-lg"></i>
+                    <span>Ringkasan Saldo</span>
+                </button>
+                <button onclick="switchTab('transaksi')" id="nav-transaksi" class="tab-btn flex items-center space-x-3 px-4 py-3 text-sm font-semibold rounded-xl text-slate-600 hover:bg-slate-50 transition">
+                    <i class="fa-solid fa-receipt text-lg"></i>
+                    <span>Riwayat Transaksi</span>
+                </button>
+                <button onclick="switchTab('anggaran')" id="nav-anggaran" class="tab-btn flex items-center space-x-3 px-4 py-3 text-sm font-semibold rounded-xl text-slate-600 hover:bg-slate-50 transition">
+                    <i class="fa-solid fa-piggy-bank text-lg"></i>
+                    <span>Anggaran & Target</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="lg:col-span-3 space-y-6">
+
+            <!-- TAB 1: DASHBOARD RINGKASAN -->
+            <div id="tab-dashboard" class="tab-content space-y-6">
+                <!-- Saldo Card -->
+                <div class="bg-gradient-to-r from-emerald-600 to-teal-700 rounded-3xl p-6 text-white shadow-xl flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                    <div>
+                        <p class="text-emerald-100 text-sm font-medium">Total Saldo Dompetin</p>
+                        <h2 class="text-3xl sm:text-4xl font-extrabold mt-1" id="total-balance">Rp 12.850.000</h2>
+                        <p class="text-emerald-200 text-xs mt-2"><i class="fa-solid fa-arrow-trend-up mr-1"></i>+8.5% dari bulan lalu</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="openModal('Pemasukan')" class="bg-white/20 hover:bg-white/30 backdrop-blur-md px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition border border-white/20">
+                            + Catat Masuk
+                        </button>
+                        <button onclick="openModal('Pengeluaran')" class="bg-white text-emerald-800 hover:bg-slate-100 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-md transition">
+                            - Catat Keluar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Financial Metric Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+                        <div class="p-3 bg-emerald-100 text-emerald-600 rounded-xl">
+                            <i class="fa-solid fa-arrow-down-left text-2xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Pemasukan Bulan Ini</p>
+                            <p class="text-xl font-bold text-slate-800 mt-0.5">Rp 8.500.000</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+                        <div class="p-3 bg-rose-100 text-rose-600 rounded-xl">
+                            <i class="fa-solid fa-arrow-up-right text-2xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Pengeluaran Bulan Ini</p>
+                            <p class="text-xl font-bold text-slate-800 mt-0.5">Rp 3.150.000</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: RIWAYAT TRANSAKSI -->
+            <div id="tab-transaksi" class="tab-content hidden space-y-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800">Catatan Keuangan</h3>
+                        <p class="text-xs text-slate-500">Kelola daftar transaksi masuk dan keluar</p>
+                    </div>
+                    <button onclick="openModal('Pengeluaran')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-sm font-semibold shadow-md transition">
+                        + Tambah Transaksi
+                    </button>
+                </div>
+
+                <!-- Data Table -->
+                <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-slate-600">
+                            <thead class="bg-slate-50 text-xs text-slate-400 uppercase border-b border-slate-200">
+                                <tr>
+                                    <th class="px-6 py-3.5">Keterangan</th>
+                                    <th class="px-6 py-3.5">Kategori</th>
+                                    <th class="px-6 py-3.5">Nominal</th>
+                                    <th class="px-6 py-3.5 text-right">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body" class="divide-y divide-slate-100">
+                                <tr class="hover:bg-slate-50 transition">
+                                    <td class="px-6 py-4 font-semibold text-slate-900">Gaji Bulanan</td>
+                                    <td class="px-6 py-4"><span class="px-3 py-1 text-xs font-medium bg-emerald-50 text-emerald-700 rounded-full border border-emerald-200">Pemasukan</span></td>
+                                    <td class="px-6 py-4 font-bold text-emerald-600">+ Rp 8.500.000</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button onclick="deleteRow(this, 8500000, 'Pemasukan')" class="text-slate-400 hover:text-rose-600 px-2 transition"><i class="fa-solid fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-slate-50 transition">
+                                    <td class="px-6 py-4 font-semibold text-slate-900">Belanja Bulanan Supermarket</td>
+                                    <td class="px-6 py-4"><span class="px-3 py-1 text-xs font-medium bg-rose-50 text-rose-700 rounded-full border border-rose-200">Pengeluaran</span></td>
+                                    <td class="px-6 py-4 font-bold text-rose-600">- Rp 1.200.000</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button onclick="deleteRow(this, -1200000, 'Pengeluaran')" class="text-slate-400 hover:text-rose-600 px-2 transition"><i class="fa-solid fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: ANGGARAN & TARGET -->
+            <div id="tab-anggaran" class="tab-content hidden space-y-6">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <h3 class="text-lg font-bold text-slate-800 border-b pb-3">Target Tabungan Masa Depan</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-sm font-semibold mb-1">
+                                <span>Dana Darurat</span>
+                                <span class="text-emerald-600">Rp 15.000.000 / Rp 20.000.000</span>
+                            </div>
+                            <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+                                <div class="bg-emerald-500 h-3 rounded-full" style="width: 75%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- MODAL FORM INPUT TRANSAKSI -->
+    <div id="input-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl w-full max-w-md shadow-2xl p-6 relative">
+            <h3 class="text-lg font-bold text-slate-800 mb-4" id="modal-title">Tambah Transaksi</h3>
+            <form id="form-add" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Keterangan Transaksi</label>
+                    <input type="text" id="input-desc" required class="w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm" placeholder="Contoh: Beli Kopi, Bayar Kos">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Tipe</label>
+                    <select id="input-type" class="w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm">
+                        <option value="Pengeluaran">Pengeluaran</option>
+                        <option value="Pemasukan">Pemasukan</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Nominal (Rp)</label>
+                    <input type="number" id="input-amount" required class="w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm" placeholder="50000">
+                </div>
+                <div class="flex justify-end space-x-3 pt-4 border-t">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100">Batal</button>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl text-sm font-bold bg-emerald-600 text-white hover:bg-emerald-700 shadow-md">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript Interaktif -->
+    <script>
+        let currentBalance = 12850000;
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('bg-emerald-50', 'text-emerald-600');
+                el.classList.add('text-slate-600');
+            });
+
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+            const activeNav = document.getElementById(`nav-${tabName}`);
+            activeNav.classList.add('bg-emerald-50', 'text-emerald-600');
+            activeNav.classList.remove('text-slate-600');
+        }
+
+        function openModal(type = 'Pengeluaran') {
+            document.getElementById('input-type').value = type;
+            document.getElementById('input-modal').classList.remove('hidden');
+            document.getElementById('input-modal').classList.add('flex');
+        }
+
+        function closeModal() {
+            document.getElementById('input-modal').classList.add('hidden');
+            document.getElementById('input-modal').classList.remove('flex');
+        }
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const desc = document.getElementById('input-desc').value;
+            const type = document.getElementById('input-type').value;
+            const amount = parseInt(document.getElementById('input-amount').value);
+
+            const tbody = document.getElementById('table-body');
+            const newRow = document.createElement('tr');
+            newRow.className = "hover:bg-slate-50 transition";
+            
+            const isPlus = type === 'Pemasukan';
+            const badgeClass = isPlus ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-700 border-rose-200';
+            const amountClass = isPlus ? 'text-emerald-600' : 'text-rose-600';
+            const sign = isPlus ? '+' : '-';
+
+            newRow.innerHTML = `
+                <td class="px-6 py-4 font-semibold text-slate-900">${desc}</td>
+                <td class="px-6 py-4"><span class="px-3 py-1 text-xs font-medium ${badgeClass} rounded-full border">${type}</span></td>
+                <td class="px-6 py-4 font-bold ${amountClass}">${sign} Rp ${amount.toLocaleString('id-ID')}</td>
+                <td class="px-6 py-4 text-right">
+                    <button onclick="deleteRow(this, ${isPlus ? amount : -amount}, '${type}')" class="text-slate-400 hover:text-rose-600 px-2 transition"><i class="fa-solid fa-trash"></i></button>
+                </td>
+            `;
+            tbody.appendChild(newRow);
+
+            // Update Saldo
+            currentBalance += isPlus ? amount : -amount;
+            document.getElementById('total-balance').innerText = `Rp ${currentBalance.toLocaleString('id-ID')}`;
+
+            document.getElementById('form-add').reset();
+            closeModal();
+            showAlert('Berhasil', 'Transaksi baru berhasil ditambahkan!');
+        }
+
+        function deleteRow(btn, amount, type) {
+            btn.closest('tr').remove();
+            currentBalance -= amount;
+            document.getElementById('total-balance').innerText = `Rp ${currentBalance.toLocaleString('id-ID')}`;
+        }
+
+        function showAlert(title, message) {
+            alert(`${title}: ${message}`);
+        }
+    </script>
+</body>
+</html>
